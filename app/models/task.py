@@ -10,3 +10,17 @@ class Task(db.Model):
     completed_at: Mapped[Optional[datetime]] = mapped_column(default=None)
 
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "is_complete": self.completed_at is not None
+        }
+
+    @classmethod
+    def from_dict(cls, task_data):
+        new_task = cls(title=task_data["title"], description=task_data["description"], completed_at=task_data.get("completed_at"))
+
+        return new_task
+
