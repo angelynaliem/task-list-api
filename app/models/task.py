@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Mapped, mapped_column
 from ..db import db
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 class Task(db.Model):
@@ -23,4 +23,10 @@ class Task(db.Model):
         new_task = cls(title=task_data["title"], description=task_data["description"], completed_at=task_data.get("completed_at"))
 
         return new_task
+
+    def mark_complete(self):
+        self.completed_at = datetime.now(timezone.utc)
+    
+    def mark_incomplete(self):
+        self.completed_at = None
 

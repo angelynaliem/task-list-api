@@ -13,44 +13,14 @@ def create_task():
         response = {
             "details": "Invalid data"
         }
+
         return response, 400
     
     return create_model(Task, request_body)
-    
-    # title = request_body["title"]
-    # description = request_body["description"]
-    # completed_at = request_body.get("completed_at")
-
-    # new_task = Task(title=title, description=description, completed_at=completed_at)
-
-    # db.session.add(new_task)
-    # db.session.commit()
-
-    # response = new_task.to_dict()
-    # response = {
-    #     "id" : new_task.id,
-    #     "title" : new_task.title,
-    #     "description" : new_task.description,
-    #     "is_complete" : new_task.completed_at is not None
-    # }
-    
-    # return response, 201
 
 @bp.get("")
 def get_all_tasks():
-    # query = db.select(Task).order_by(Task.id)
-    # tasks = db.session.scalars(query)
-    # tasks_response = []
-    # for task in tasks:
-    #     tasks_response.append(
-    #         {
-    #             "id": task.id,
-    #             "title": task.title,
-    #             "description": task.description,
-    #             "is_complete": task.completed_at is not None
-    #         }
-    #     )
-    # return tasks_response
+
     return get_models_with_filters(Task, request.args)
 
 @bp.get("/<task_id>")
@@ -58,29 +28,6 @@ def get_one_task(task_id):
     task = validate_model(Task, task_id)
 
     return task.to_dict()
-
-    # return {
-    #     "id" : task.id,
-    #     "title" : task.title,
-    #     "description" : task.description,
-    #     "is_complete" : task.completed_at is not None
-    # }
-
-# def validate_task(task_id):
-#     try:
-#         task_id = int(task_id)
-#     except:
-#         response = {"message" : f"task {task_id} is invalid"}
-#         abort(make_response(response, 400))
-
-#     query = db.select(Task).where(Task.id == task_id)
-#     task = db.session.scalar(query)
-
-#     if not task:
-#         response = {"message" : f"task {task_id} is not found"}
-#         abort(make_response(response, 404))
-    
-#     return task
 
 @bp.put("/<task_id>")
 def update_task(task_id):
@@ -101,3 +48,23 @@ def delete_task(task_id):
     db.session.commit()
 
     return make_response("", 204)
+
+@bp.patch("/<task_id>/mark_complete")
+def patch_task_mark_complete(task_id):
+    task = validate_model(Task, task_id)
+
+    task.mark_complete()
+
+    db.session.commit()
+
+    return make_response("", 204, {"Content-Type" : "application/json"})
+
+@bp.patch("/<task_id>/mark_incomplete")
+def patch_task_mark_incomplete(task_id):
+    task = validate_model(Task, task_id)
+
+    task.mark_incomplete()
+
+    db.session.commit()
+
+    return make_response("", 204, {"Content-Type" : "application/json"})
