@@ -82,5 +82,3 @@ def notify_slack(task_title):
     headers=headers, 
     json=body
     )
-    # print("Slack Response Status:", response.status_code)
-    # print("Slack Response JSON:", response.json())

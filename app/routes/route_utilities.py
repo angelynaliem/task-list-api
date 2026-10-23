@@ -21,7 +21,7 @@ def create_model(cls, model_data):
     try:
         new_model = cls.from_dict(model_data)
     except KeyError as error:
-        response = {"message" : f"Invalid request: missing {error.args[0]}"}
+        response = {"details" : "Invalid data"}
         abort(make_response(response, 400))
     db.session.add(new_model)
     db.session.commit()
