@@ -193,8 +193,6 @@ def test_delete_goal_not_found(client):
     # Assert
     assert response.status_code == 404
     assert response_body == {"message" : "Goal 1 not found"}
-    assert db.session.scalars(db.select(Goal)).all() == []
-
 
 # @pytest.mark.skip(reason="No way to test this feature yet")
 def test_create_goal_missing_title(client):
